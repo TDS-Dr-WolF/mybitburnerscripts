@@ -1,0 +1,35 @@
+/** @param {NS} ns **/
+
+export async function main(ns) {
+    const settings = {
+        pause: 6 * 1000,
+    }
+    var target = ns.args[0];
+    var hostName = target;
+    var moneyThresh = ns.getServerMaxMoney(target) / 2;
+    var securityThresh = ns.getServerMinSecurityLevel(target) + 5;
+    var serverMaxMoney = ns.getServerMaxMoney(target);
+    var serverMoneyAvailable = ns.getServerMoneyAvailable(target);
+
+    let globalVariable;
+    globalVariable = ns.args.length;
+
+    ns.tprint(globalVariable);
+
+    ns.tprint(hostName);
+    ns.tprint("£", serverMaxMoney / 100000, "m");
+    ns.tprint("£", serverMoneyAvailable);
+
+    while (true) {
+
+
+        if (ns.getServerSecurityLevel(target) > securityThresh) {
+            await ns.weaken(target);
+        } else if (ns.getServerMoneyAvailable(target) < moneyThresh) {
+            await ns.grow(target);
+        } else {
+            await ns.hack(target);
+        } await ns.sleep(settings.pause);
+
+    }
+}
